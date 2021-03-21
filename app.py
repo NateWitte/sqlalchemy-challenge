@@ -83,31 +83,33 @@ def stations():
 def tobs():
     session = Session(engine)
 
-    results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>=dt.date(2016, 8, 23)).filter(Measurement.station=="USC00519281")
+    results = session.query(Measurement.date, Measurement.tobs).filter(Measurement.date>=dt.date(2016, 8, 23)).filter(Measurement.station=="USC00519281")
     mylist=list(results)
     session.close()
     return jsonify(mylist)
-# @app.route("/api/v1.0/passengers")
-# def passengers():
-#     # Create our session (link) from Python to the DB
-#     session = Session(engine)
 
-#     """Return a list of passenger data including the name, age, and sex of each passenger"""
-#     # Query all passengers
-#     results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
+    
+""" @app.route("/api/v1.0/<start>")
+def startingtemp(start):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
 
-#     session.close()
+    Return a list of passenger data including the name, age, and sex of each passenger
+    # Query all passengers
+    results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
 
-#     # Create a dictionary from the row data and append to a list of all_passengers
-#     all_passengers = []
-#     for name, age, sex in results:
-#         passenger_dict = {}
-#         passenger_dict["name"] = name
-#         passenger_dict["age"] = age
-#         passenger_dict["sex"] = sex
-#         all_passengers.append(passenger_dict)
+    session.close()
 
-#     return jsonify(all_passengers)
+    # Create a dictionary from the row data and append to a list of all_passengers
+    all_passengers = []
+    for name, age, sex in results:
+        passenger_dict = {}
+        passenger_dict["name"] = name
+        passenger_dict["age"] = age
+        passenger_dict["sex"] = sex
+        all_passengers.append(passenger_dict)
+
+    return jsonify(all_passengers) """
 
 
 if __name__ == '__main__':
