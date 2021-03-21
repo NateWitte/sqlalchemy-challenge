@@ -78,6 +78,15 @@ def stations():
         all_stations.append(station_dict)
 
     return jsonify(all_stations)
+
+@app.route("/api/v1.0/tobs")
+def tobs():
+    session = Session(engine)
+
+    results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>="08/24/17").filter(Measurement.station=="USC00519281")
+    mylist=list(results)
+    session.close()
+    return jsonify(mylist)
 # @app.route("/api/v1.0/passengers")
 # def passengers():
 #     # Create our session (link) from Python to the DB
