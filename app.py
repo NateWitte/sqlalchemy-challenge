@@ -4,7 +4,7 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
-
+import datetime as dt
 from flask import Flask, jsonify
 
 
@@ -83,7 +83,7 @@ def stations():
 def tobs():
     session = Session(engine)
 
-    results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>="08/24/17").filter(Measurement.station=="USC00519281")
+    results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>=dt.date(2016, 8, 23)).filter(Measurement.station=="USC00519281")
     mylist=list(results)
     session.close()
     return jsonify(mylist)
