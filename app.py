@@ -63,12 +63,21 @@ def stations():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    """Return a list of all dates and prcp"""
+    """Return a list of all Stations"""
     # Query all dates and measurements
-    results = session.query(Station).all()
-    session.close()
+    results = session.query(Station.station, Station.name, Station.latitude, Station.longitude, Station.elevation).all()
+        # Create a dictionary from the row data and append to a list of all_stations
+    all_stations = []
+    for station, name, latitude, longitude, elevation in results:
+        station_dict = {}
+        station_dict["station"] = station
+        station_dict["name"] = name
+        station_dict["latitude"] = latitude
+        station_dict["longitude"] = longitude
+        station_dict["elevation"] = elevation
+        all_stations.append(station_dict)
 
-    return jsonify(results)
+    return jsonify(all_stations)
 # @app.route("/api/v1.0/passengers")
 # def passengers():
 #     # Create our session (link) from Python to the DB
