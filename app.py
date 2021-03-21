@@ -106,6 +106,23 @@ def startingtemp(start):
 
     return jsonify(resultsdict)
 
+@app.route("/api/v1.0/<start>/<end>")
+def startingandendingtemp(start, end):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+    date_time_start = dt.datetime.strptime(start, '%Y-%m-%d').date()
+    date_time_end = dt.datetime.strptime(end, '%Y-%m-%d').date()
+    # Query all dates after start
+    minresults = session.query(func.min(Measurement.tobs)).filter(Measurement.date>=date_time_start).filter(Measurement.date<=date_time_end).all()[0][0]
+    averageresults = session.query(func.avg(Measurement.tobs)).filter(Measurement.date>=date_time_start).filter(Measurement.date<=date_time_end).all()[0][0]
+    maxresults=session.query(func.max(Measurement.tobs)).filter(Measurement.date>=date_time_start).filter(Measurement.date<=date_time_end).all()[0][0]
+    session.close()
+    resultsdict = {}
+    resultsdict["Average Temperature"] = averageresults
+    resultsdict["Minimum Temperature"] = minresults
+    resultsdict["Maximum Temperature"] = maxresults
+
+    return jsonify(resultsdict)
 
 if __name__ == '__main__':
     app.run(debug=True)
