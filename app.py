@@ -1,5 +1,5 @@
 import numpy as np
-
+from scipy import stats
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -88,28 +88,23 @@ def tobs():
     session.close()
     return jsonify(mylist)
 
-    
-""" @app.route("/api/v1.0/<start>")
+
+@app.route("/api/v1.0/<start>")
 def startingtemp(start):
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
-    Return a list of passenger data including the name, age, and sex of each passenger
-    # Query all passengers
-    results = session.query(Passenger.name, Passenger.age, Passenger.sex).all()
-
+    date_time_obj = dt.datetime.strptime(start, '%Y-%m-%d').date()
+    # Query all dates after start
+    minresults = session.query(func.min(Measurement.tobs)).filter(Measurement.date>=date_time_obj).all()[0][0]
+    averageresults = session.query(func.avg(Measurement.tobs)).filter(Measurement.date>=date_time_obj).all()[0][0]
+    maxresults=session.query(func.max(Measurement.tobs)).filter(Measurement.date>=date_time_obj).all()[0][0]
     session.close()
+    resultsdict = {}
+    resultsdict["Average Temperature"] = averageresults
+    resultsdict["Minimum Temperature"] = minresults
+    resultsdict["Maximum Temperature"] = maxresults
 
-    # Create a dictionary from the row data and append to a list of all_passengers
-    all_passengers = []
-    for name, age, sex in results:
-        passenger_dict = {}
-        passenger_dict["name"] = name
-        passenger_dict["age"] = age
-        passenger_dict["sex"] = sex
-        all_passengers.append(passenger_dict)
-
-    return jsonify(all_passengers) """
+    return jsonify(resultsdict)
 
 
 if __name__ == '__main__':
