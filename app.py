@@ -58,7 +58,17 @@ def precipitation():
 
     return jsonify(mydictionary)
 
+@app.route("/api/v1.0/stations")
+def stations():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
 
+    """Return a list of all dates and prcp"""
+    # Query all dates and measurements
+    results = session.query(Station).all()
+    session.close()
+
+    return jsonify(results)
 # @app.route("/api/v1.0/passengers")
 # def passengers():
 #     # Create our session (link) from Python to the DB
